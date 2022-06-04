@@ -1,7 +1,8 @@
 import os
 
 class credentials(object):
-  DATADIR = os.getcwd()+"\\dataset images"
+  FOLDR = ["dataset images", "originalData"]
+  DATADIR = os.getcwd()+"\\"+ FOLDR[1]
   CATEGORIES = ["Closed_fist","Open_palm","Peace_sign","Pinky","Pointing","Rocknroll", "Spiderman", "Spock", "Thumbs_up"] 
   
   isConstantSize = True # sets if image has constants size
