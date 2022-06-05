@@ -38,9 +38,6 @@ class handleTrainingData ():
       pickle_in = open("y.pickle","rb")
       self.y = pickle.load(pickle_in)
 
-
-
-
   def exportData(self, X, y):
     # Export current set
     pickle_out = open("X.pickle","wb")
@@ -52,7 +49,7 @@ class handleTrainingData ():
     pickle_out.close()
 
   def init_data(self):
-    """Loads and catecorizes training data
+    """Loads and categorizes training data
     """
     for category in self.CATEGORIES:
       path = os.path.join(self.DATADIR,category)
