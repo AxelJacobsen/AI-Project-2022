@@ -46,8 +46,10 @@ def scheduler(epoch):
 CATEGORIES = ["Closed_fist","Finger_guns","Open_palm","Peace_sign","Pinky","Pointing","Rocknroll","Spiderman","Spock","Thumbs_up"] 
 DATADIR = "../../originalData/"
 IMGSIZE = 256
+
 #Create object
 dataNormalizer = handleTrainingData(CATEGORIES,DATADIR,IMGSIZE)
+
 #Define x and y
 X_train = dataNormalizer.X
 Y_train = dataNormalizer.y
