@@ -7,18 +7,12 @@ import tensorflow as tf
 from constants.credentials import credentials as CR
 
 num_classes  = len(CR.CATEGORIES)
-batch_size   = 10
+batch_size   = 32
 num_epochs   = 10
 img_size = CR.IMGSIZE
 
-model_vgg19 = tf.keras.applications.VGG19(
-    include_top=True,
-    weights = None,
-    input_shape=(img_size, img_size, 1),
-    # pooling='avg',
-    classes=num_classes,
-    classifier_activation="softmax",
-)
+
+
 
 ds_train = tf.keras.preprocessing.image_dataset_from_directory(
   CR.FOLDR,
@@ -54,7 +48,20 @@ def augment(x ,y) :
 
 ds_train = ds_train.map(augment)
  
-  
+
+
+
+
+model_vgg19 = tf.keras.applications.VGG19(
+    include_top=True,
+    weights = None,
+    input_shape=(img_size, img_size, 1),
+    # pooling='avg',
+    classes=num_classes,
+    classifier_activation="softmax",
+)
+
+
 model_vgg19.compile(
   optimizer='sgd',
   loss=[
@@ -63,7 +70,7 @@ model_vgg19.compile(
   metrics=["accuracy"]
 )
 
-history = model_vgg19.fit(ds_train, epochs=num_epochs, batch_size = 128)
+history = model_vgg19.fit(ds_train, validation_data = ds_validation, epochs=num_epochs, batch_size = batch_size)
 
-(loss, accuracy) = model_vgg19.evaluate(ds_validation, batch_size=128, verbose=1)
+(loss, accuracy) = model_vgg19.evaluate(ds_train, batch_size=128, verbose=1)
 print("accuracy: {:.2f}%".format(accuracy * 100))
