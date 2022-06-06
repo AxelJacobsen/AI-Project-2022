@@ -56,11 +56,14 @@ ds_train = ds_train.map(augment)
  
   
 model_vgg19.compile(
-  optimizer='adam',
+  optimizer='sgd',
   loss=[
     keras.losses.SparseCategoricalCrossentropy(from_logits= True)
     ],
   metrics=["accuracy"]
 )
 
-model_vgg19.fit(ds_train, epochs=num_epochs)
+history = model_vgg19.fit(ds_train, epochs=num_epochs, batch_size = 128)
+
+(loss, accuracy) = model_vgg19.evaluate(ds_validation, batch_size=128, verbose=1)
+print("accuracy: {:.2f}%".format(accuracy * 100))
