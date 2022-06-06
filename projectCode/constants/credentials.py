@@ -7,5 +7,5 @@ class credentials(object):
   
   isConstantSize = True # sets if image has constants size
   # DOWNSIZE = 50 # current downsize if size is scalable, currently non-functioning
-  IMGSIZE = 350 # constant size to put images as
+  IMGSIZE = 100 # constant size to put images as
   
