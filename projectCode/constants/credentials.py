@@ -1,7 +1,7 @@
 import os
 
 class credentials(object):
-  FOLDR = ["dataset images", "originalData"]
+  FOLDR = ["dataset images", "../originalData"]
   DATADIR = os.getcwd()+"\\"+ FOLDR[1]
   CATEGORIES = ['Closed_fist', 'Finger_guns', 'Open_palm', 'Peace_sign', 'Pinky', 'Pointing', 'Rocknroll', 'Spiderman', 'Spock', 'Thumbs_up']
   

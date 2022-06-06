@@ -1,5 +1,5 @@
 import os
-os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
+#os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
 
 import keras
 import numpy as np
@@ -18,7 +18,7 @@ from constants.credentials import credentials as CR
 
 num_classes  = len(CR.CATEGORIES)
 batch_size   = 10
-num_epochs       = 10
+num_epochs   = 10
 img_size = CR.IMGSIZE
 
 model = keras.Sequential(
@@ -69,7 +69,7 @@ def augment(x ,y) :
   return image,y
 
 ds_train = ds_train.map(augment)
- 
+
   
 model.compile(
   optimizer='adam',
