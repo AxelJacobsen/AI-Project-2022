@@ -2,23 +2,13 @@ import os
 os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
 
 import keras
-import numpy as np
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D, AveragePooling2D
-from keras.initializers import he_normal
-from keras import optimizers
-from keras.callbacks import LearningRateScheduler, TensorBoard
-from keras.layers.normalization import batch_normalization
-from keras.utils.data_utils import get_file
 import tensorflow as tf
 
 from constants.credentials import credentials as CR
 
 num_classes  = len(CR.CATEGORIES)
 batch_size   = 10
-num_epochs       = 10
+num_epochs   = 10
 img_size = CR.IMGSIZE
 
 model = keras.Sequential(
@@ -37,7 +27,7 @@ model = keras.Sequential(
 )
 
 ds_train = tf.keras.preprocessing.image_dataset_from_directory(
-  CR.FOLDR[1],
+  CR.FOLDR,
   labels = 'inferred',
   label_mode = 'int',
   class_names = CR.CATEGORIES,
@@ -51,7 +41,7 @@ ds_train = tf.keras.preprocessing.image_dataset_from_directory(
 )
 
 ds_validation = tf.keras.preprocessing.image_dataset_from_directory(
-  CR.FOLDR[1],
+  CR.FOLDR,
   labels = 'inferred',
   label_mode = 'int',
   class_names = CR.CATEGORIES,
