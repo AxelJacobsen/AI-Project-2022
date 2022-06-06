@@ -1,5 +1,5 @@
 import os
-#os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
+os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
 
 import keras
 import tensorflow as tf
@@ -11,19 +11,13 @@ batch_size   = 10
 num_epochs   = 10
 img_size = CR.IMGSIZE
 
-model = keras.Sequential(
-    [
-        keras.layers.Input(shape= (img_size,img_size,1)),                                          
-        keras.layers.Conv2D(32, 3, padding = "valid", activation = "relu"),             
-        keras.layers.MaxPooling2D(pool_size = (2,2)),                                  
-        keras.layers.Conv2D(64, 3, activation = "relu"),                                                            
-        keras.layers.MaxPooling2D(pool_size = (2,2)),                                  
-        keras.layers.Conv2D(128, 3, activation = "relu"),                             
-        keras.layers.Flatten(),                                                        
-        keras.layers.Dense(64, activation = "relu"),                                   
-        keras.layers.Dense(10),                                                        
-    
-    ]
+model_vgg19 = tf.keras.applications.VGG19(
+    include_top=True,
+    weights = None,
+    input_shape=(img_size, img_size, 1),
+    # pooling='avg',
+    classes=num_classes,
+    classifier_activation="softmax",
 )
 
 ds_train = tf.keras.preprocessing.image_dataset_from_directory(
@@ -59,9 +53,9 @@ def augment(x ,y) :
   return image,y
 
 ds_train = ds_train.map(augment)
-
+ 
   
-model.compile(
+model_vgg19.compile(
   optimizer='adam',
   loss=[
     keras.losses.SparseCategoricalCrossentropy(from_logits= True)
@@ -69,4 +63,4 @@ model.compile(
   metrics=["accuracy"]
 )
 
-model.fit(ds_train, epochs=num_epochs)
+model_vgg19.fit(ds_train, epochs=num_epochs)
