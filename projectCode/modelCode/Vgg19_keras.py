@@ -43,7 +43,8 @@ def scheduler(epoch):
     return 0.001
 
 #Initialize object with correct details
-CATEGORIES = ["Closed_fist","Finger_guns","Open_palm","Peace_sign","Pinky","Pointing","Rocknroll","Spiderman","Spock","Thumbs_up"] 
+#CATEGORIES = ["Closed_fist","Finger_guns","Open_palm","Peace_sign","Pinky","Pointing","Rocknroll","Spiderman","Spock","Thumbs_up"] 
+CATEGORIES = ['Closed_fist', 'Open_palm', 'Peace_sign', 'Pinky', 'Pointing', 'Rocknroll', 'Spiderman', 'Spock', 'Thumbs_up']
 DATADIR = "../../originalData/"
 IMGSIZE = 256
 
