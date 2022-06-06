@@ -1,0 +1,62 @@
+AI Project Report
+
+Authors:
+Axel E. W. Jacobsen
+Daniel Hao Hyunh
+Matthias Greeven
+
+
+HELLO GRUPPA:
+Har brutt ned oppgaven litt for å gjøre den mer overkommelig, ingenting her er satt i stein.
+Om du begynner å skrive så finner du ut at noe passer bedre et annet sted, bare flytt det og kompanser. Undertittlene er ikke egt ment som egne avsnitt, men for de større kategoriene kan det være smart å splitte i to. Tenker det er smart å ha med en del grafer og bilder i teksten, men hold det til etter «Your implementation»
+OBS: Send melding når du skal redigere en seksjon så blir det ikke merge errors, en pusher av gangen. LAGRE DET DU HAR ENDRA LOKALT SÅ PUSH DET NÅR DET ER HELT FERDIG.
+Bare sleng in når dere har gjort noe som kan være verdt å nevne på contributions siden.
+
+Introduction 			300-400 Words
+	Task			(Project scope)
+	Project motivation
+This is the project report for the AI project spring 2022. For this project our goal was to create an AI model trained on a self-made dataset made up of 9 different hand gestures. Since the task is essentially a bullet point list, there is not too many assumptions to be made. However, the task asks for “More than 5” gestures, so we decided to go all out, and do 9. This shouldn’t cause any issues, due to there being 10000 photos in the final dataset. We came to this number of photos due to the task asking for “at least 2000 special hand gestures”, as well as “Create the same number of samples from other 4 users”. Since there was a lot of pictures to take, we contacted other groups to ensure we could co-operate through sharing photos, and thereby easing the workload. Finally, we decided to choose VGG19 as our primary attention-based CNN model and compare it to a ResNet network trained on the same data. Our goal is to perform an experiment by training two AI models with a self-made dataset and see which one performs better.
+Background			100-300 Words
+	Explain any technical feature of the project
+Background information needed to understand the technical details in the rest of the report (?)
+To understand how we executed this project, some terminology must be explained. An AI dataset is defined by the Oxford Dictionary as “a collection of data that is treated as a single unit by a computer”. The dataset we have made is essentially just a large collection of pictures with labels attached to each. The data in the dataset has been “normalized” to ensure more uniform data. Normalizing 
+When the AI model reads this data it “looks” at the pictures and “memorizes” important features like the outline and edges.
+Your implementation.					             Alt under her faller under det
+Pictures			300-450 Words
+How we decided gestures
+	Co-operation with other groups
+	Problems we faced and potential issues
+Before we started taking pictures, we had to decide on what gestures we wanted to use. Due to the magnitude of photos needed, we co-operated with another group from the start to agree upon which gestures we wanted to use. This way we had at least 4000 pictures with identical labels. The gestures we settled on were; “Closed_fist”, “Finger_guns”, “Open_palm”, “Peace_sign”, ”Pinky”, “Pointing”, “Rocknroll”, “Spiderman”, “Spock” and “Thumbs_up”. Most names are self-explanatory, but for “Spiderman” and “Spock”, they are each a reference to iconic hand gestures from pop culture. “Spiderman” is essentially just a flipped version of “Rocknroll” with the thumb sticking out. While “Spock” is the Vulcan salute from Start trek. The gesture is an alteration of “Open_palm”, where the fingers are split into three groups, index and middle finger, pinky, and ring finger, lastly, the thumb. 
+Since there was a lot of pictures to take, everyone took the pictures individually. This led to a lot of noise in the form of, varying camera quality, different lighting, and potential background objects. We concluded that this shouldn’t cause any significant issues in the training, since we are normalizing the data to grayscale, and a standardized size. However, another issue arose after taking the images. Transporting the images before they were normalized proved to be a challenge due to their size. We solved this by using google-photos. Google-photos is efficient at backing up photos from your phone, as well as supporting “bursts”. Using “bursts” allowed us to take hundreds of seconds in a matter of seconds. This significantly reduced to overall time it took us to process the images and construct the dataset.
+Normalizing			200-400 Words
+	How is the data normalized
+	Why did we do it like this
+	Where did we find code for it
+As mentioned, we realized that it was necessary to normalize our data. Before we started, we researched what common ways image data is usually normalized. We wanted the normalization to be automated with a script, since there was too much data to do manually. After taking this into consideration, we ended up finding a script which would resize and grayscale our data. We had to alter it quite significantly to have it work in the first place, but when we were done, it would normalize and compile it into a ready dataset for us. The issue with this, was that it didn’t save a normalized version of each picture. Instead, it would just send it directly into the AI model. Realizing that this would take too much time, we decided to rewrite it to save the photos directly instead of just generating a dataset. At the same time, we switched from cv2 to TensorFlow for our data manipulation/normalization, as TensorFlow has a more streamlined and less memory dependent method for preparing our data. With these changes our code was built up by two parts, the data normalizer, and the AI model trainer. 
+
+AI models			250-600 Words
+	Which we chose and why
+	Where did we get the code
+
+Experiments (?)		250-550 Words
+	Datasets	(Mulig vi alrede har skrevet dette tidliger, usikker)
+	Results		(Hva fant vi, typ accuracy og lignende)
+	Analysis 	(Blir vel litt dypere hvorfor vi fikk svarene vi fikk)
+
+Reflection & discussion	200-400 Words
+comparisons 	(Åssen performa datasettet på en model ovenfor en annen)
+discussion	(Hva kunne vi gjort bedre, hva funka hva funka ikke)
+Conclusion			200-500 Words
+
+Sources:
+https://www.oxfordlearnersdictionaries.com/definition/english/data-set?q=data+set
+
+Group contributions:
+Everyone has contributed pictures for the dataset.
+Individual contributions:
+Axel:
+	Report structuring
+	Finding VGG19 model
+Daniel:
+	Finding and implementing data normalization
+Matthias:

@@ -125,7 +125,7 @@ model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=keras.regulariz
 model.add(batch_normalization())
 model.add(Activation('relu'))
 model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool'))
-
+ 
 # model modification for cifar-10
 model.add(Flatten(name='flatten'))
 model.add(Dense(4096, use_bias = True, kernel_regularizer=keras.regularizers.l2(weight_decay), kernel_initializer=he_normal(), name='fc_cifa10'))
