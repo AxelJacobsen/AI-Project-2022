@@ -8,12 +8,12 @@ from keras.layers import Dropout
 from keras.models import Model
 import tensorflow as tf
 from constants.credentials import credentials as CR
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, accuracy_score
 import matplotlib.pyplot as plt
 
 num_classes  = len(CR.CATEGORIES)
 batch_size   = 64
-num_epochs   = 2
+num_epochs   = 20
 img_size = CR.IMGSIZE
 
 
@@ -46,8 +46,6 @@ ds_validation = tf.keras.preprocessing.image_dataset_from_directory(
 )
 
 
-
-
 def augment(x ,y) :
   image = tf.image.random_brightness(x, max_delta = 0.05)
   return image,y
@@ -64,6 +62,24 @@ model_resnet = tf.keras.applications.ResNet152(
     classes=num_classes,
 )
 
+# Store the fully connected layers
+fc1 = model_resnet.layers[-3]
+fc2 = model_resnet.layers[-2]
+predictions = model_resnet.layers[-1]
+
+# Create the dropout layers
+dropout1 = Dropout(0.6)
+dropout2 = Dropout(0.6)
+
+# Reconnect the layers
+x = dropout1(fc1.output)
+x = fc2(x)
+x = dropout2(x)
+predictors = predictions(x)
+
+# Create a new model
+resNet_model = Model(inputs=model_resnet.input, outputs=predictors)
+
 model_vgg19 = tf.keras.applications.VGG19(
     include_top=True,
     weights = None,
@@ -74,25 +90,7 @@ model_vgg19 = tf.keras.applications.VGG19(
 )
 
 # Set eval model to use specific model: model_resnet, model_vgg19
-eval_model = model_vgg19
-
-# Store the fully connected layers
-fc1 = eval_model.layers[-3]
-fc2 = eval_model.layers[-2]
-predictions = eval_model.layers[-1]
-
-# Create the dropout layers
-dropout1 = Dropout(0.1)
-dropout2 = Dropout(0.1)
-
-# Reconnect the layers
-x = dropout1(fc1.output)
-x = fc2(x)
-x = dropout2(x)
-predictors = predictions(x)
-
-# Create a new model
-train_model = Model(inputs=eval_model.input, outputs=predictors)
+train_model = model_vgg19    ##resNet_model
 
 train_model.compile(
   optimizer=tf.keras.optimizers.SGD(
@@ -112,11 +110,8 @@ for x, y in ds_train:
   predictions = np.concatenate([predictions, np.argmax(train_model.predict(x), axis = -1)])
   labels = np.concatenate([labels, y.numpy()])
 
-
-
-
 history = train_model.fit(ds_train, validation_data = ds_validation, epochs=num_epochs, batch_size = batch_size)
-
+train_model.save('savedVGG19.h5')
 
 # Plot accuracy per iteration
 plt.plot(history.history['accuracy'], label='accuracy', color='blue')
@@ -137,7 +132,8 @@ plt.xlabel('epoch')
 plt.show()
 
 print("f1-score: ",f1_score(labels, predictions, average='weighted'))
-print("Confusion matrix:\n",tf.math.confusion_matrix(labels, predictions))
+print("accuracy-score: ",accuracy_score(labels, predictions))
+print("Confusion matrix:\n",tf.math.confusion_matrix(labels=labels, predictions=predictions).numpy())
 
 (loss, accuracy) = train_model.evaluate(ds_train, batch_size=128, verbose=1)
-print("accuracy: {:.2f}%".format,accuracy * 100)
+print('accuracy: {:.2f}%'.format(accuracy * 100)) 
