@@ -17,10 +17,8 @@ num_epochs   = 2
 img_size = CR.IMGSIZE
 
 
-
-
 ds_train = tf.keras.preprocessing.image_dataset_from_directory(
-  CR.FOLDR,
+  CR.DIR,
   labels = 'inferred',
   label_mode = 'int',
   class_names = CR.CATEGORIES,
@@ -34,7 +32,7 @@ ds_train = tf.keras.preprocessing.image_dataset_from_directory(
 )
 
 ds_validation = tf.keras.preprocessing.image_dataset_from_directory(
-  CR.FOLDR,
+  CR.DIR,
   labels = 'inferred',
   label_mode = 'int',
   class_names = CR.CATEGORIES,
@@ -109,6 +107,7 @@ train_model.compile(
 
 predictions = np.array([])
 labels =  np.array([])
+
 for x, y in ds_train:
   predictions = np.concatenate([predictions, np.argmax(train_model.predict(x), axis = -1)])
   labels = np.concatenate([labels, y.numpy()])
@@ -138,7 +137,7 @@ plt.xlabel('epoch')
 plt.show()
 
 print("f1-score: ",f1_score(labels, predictions, average='weighted'))
-print("Confusion matrix:\n",tf.math.confusion_matrix(labels=labels, predictions=predictions).numpy())
+print("Confusion matrix:\n",tf.math.confusion_matrix(labels, predictions))
 
 (loss, accuracy) = train_model.evaluate(ds_train, batch_size=128, verbose=1)
 print("accuracy: {:.2f}%".format,accuracy * 100)
