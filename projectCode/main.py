@@ -1,4 +1,6 @@
 import os
+
+import numpy as np
 os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
 
 import keras
@@ -6,10 +8,12 @@ from keras.layers import Dropout
 from keras.models import Model
 import tensorflow as tf
 from constants.credentials import credentials as CR
+from sklearn.metrics import f1_score
+import matplotlib.pyplot as plt
 
 num_classes  = len(CR.CATEGORIES)
 batch_size   = 64
-num_epochs   = 10
+num_epochs   = 2
 img_size = CR.IMGSIZE
 
 
@@ -42,6 +46,9 @@ ds_validation = tf.keras.preprocessing.image_dataset_from_directory(
   validation_split = 0.1,
   subset = "validation",
 )
+
+
+
 
 def augment(x ,y) :
   image = tf.image.random_brightness(x, max_delta = 0.05)
@@ -99,7 +106,39 @@ train_model.compile(
   metrics=["accuracy"]
 )
 
+
+predictions = np.array([])
+labels =  np.array([])
+for x, y in ds_train:
+  predictions = np.concatenate([predictions, np.argmax(train_model.predict(x), axis = -1)])
+  labels = np.concatenate([labels, y.numpy()])
+
+
+
+
 history = train_model.fit(ds_train, validation_data = ds_validation, epochs=num_epochs, batch_size = batch_size)
 
-(loss, accuracy) = eval_model.evaluate(ds_train, batch_size=128, verbose=1)
-print("accuracy: {:.2f}%".format(accuracy * 100))
+
+# Plot accuracy per iteration
+plt.plot(history.history['accuracy'], label='accuracy', color='blue')
+plt.plot(history.history['val_accuracy'], label='val_accuracy', color='green')
+plt.legend(['accuracy','val_accuracy'])
+plt.title('Accuracy History')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.show()
+
+# Plot loss per iteration
+plt.plot(history.history['loss'], label='loss', color='red')
+plt.plot(history.history['val_loss'], label='val_loss', color='orange')
+plt.legend(['loss','val_loss'])
+plt.title('Loss History')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.show()
+
+print("f1-score: ",f1_score(labels, predictions, average='weighted'))
+print("Confusion matrix:\n",tf.math.confusion_matrix(labels=labels, predictions=predictions).numpy())
+
+(loss, accuracy) = train_model.evaluate(ds_train, batch_size=128, verbose=1)
+print("accuracy: {:.2f}%".format,accuracy * 100)
