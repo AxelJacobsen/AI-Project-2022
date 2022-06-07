@@ -1,7 +1,7 @@
 import os
 
 import numpy as np
-#os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
+os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.6/bin")
 
 import keras
 from keras.layers import Dropout
@@ -62,24 +62,6 @@ model_resnet = tf.keras.applications.ResNet152(
     classes=num_classes,
 )
 
-# Store the fully connected layers
-fc1 = model_resnet.layers[-3]
-fc2 = model_resnet.layers[-2]
-predictions = model_resnet.layers[-1]
-
-# Create the dropout layers
-dropout1 = Dropout(0.6)
-dropout2 = Dropout(0.6)
-
-# Reconnect the layers
-x = dropout1(fc1.output)
-x = fc2(x)
-x = dropout2(x)
-predictors = predictions(x)
-
-# Create a new model
-resNet_model = Model(inputs=model_resnet.input, outputs=predictors)
-
 model_vgg19 = tf.keras.applications.VGG19(
     include_top=True,
     weights = None,
@@ -90,7 +72,25 @@ model_vgg19 = tf.keras.applications.VGG19(
 )
 
 # Set eval model to use specific model: model_resnet, model_vgg19
-train_model = model_vgg19    ##resNet_model
+eval_model = model_vgg19
+
+# Store the fully connected layers
+fc1 = eval_model.layers[-3]
+fc2 = eval_model.layers[-2]
+predictions = eval_model.layers[-1]
+
+# Create the dropout layers
+dropout1 = Dropout(0.1)
+dropout2 = Dropout(0.1)
+
+# Reconnect the layers
+x = dropout1(fc1.output)
+x = fc2(x)
+x = dropout2(x)
+predictors = predictions(x)
+
+# Create a new model
+train_model = Model(inputs=eval_model.input, outputs=predictors)
 
 train_model.compile(
   optimizer=tf.keras.optimizers.SGD(
@@ -105,8 +105,8 @@ train_model.compile(
 
 predictions = np.array([])
 labels =  np.array([])
-
 for x, y in ds_train:
+
   predictions = np.concatenate([predictions, np.argmax(train_model.predict(x), axis = -1)])
   labels = np.concatenate([labels, y.numpy()])
 
